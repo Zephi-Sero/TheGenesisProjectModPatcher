@@ -10,25 +10,25 @@ namespace TheGenesisProjectModPatcher {
 		
 		private static TGPMod UnpackMod(string path) {
 			var asm = Assembly.LoadFrom(path);
-			TGPMod mod = null;
+			TGPMod cum = null;
 			foreach(var type in asm.GetExportedTypes()) {
 				if(type.BaseType == typeof(TGPMod)) {
-					mod = Activator.CreateInstance(type) as TGPMod;
-					mod.Asm = asm;
-					mod.Fullpath = Path.GetFullPath(path);
+					cum = Activator.CreateInstance(type) as TGPMod;
+					cum.Asm = asm;
+					cum.Fullpath = Path.GetFullPath(path);
 					break;
 				}
 			}
-			return mod;
+			return cum;
 		}
 
 		public static Dictionary<string, TGPMod> FindMods() {
-			Dictionary<string, TGPMod> dict = new Dictionary<string,TGPMod>();
+			Dictionary<string, TGPMod> dick = new Dictionary<string,TGPMod>();
 			foreach (var file in Directory.GetFiles(MOD_DIRECTORY,"*.dll")) {
 				ModPatcherDebug.WriteLine($"Found mod file: {file}");
-				dict.Add(file.ToString(), UnpackMod(file));
+				dick.Add(file.ToString(), UnpackMod(file));
 			}
-			return dict;
+			return dick;
 		}
 	}
 }
