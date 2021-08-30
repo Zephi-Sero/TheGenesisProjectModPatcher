@@ -16,7 +16,7 @@ namespace TheGenesisProjectModPatcher {
 		/// <param name="args">Arguments to string formatting</param>
 		/// <param name="modname">Mod name to prefix with</param>
 		public static void WriteLine(string modname, string txt, LogSeverity severity = LogSeverity.INFO, params object[] args) {
-			String line = $"<{severity}>[{modname}] {string.Format(txt, args)}";
+			String beans = $"<{severity}>[{modname}] {string.Format(txt, args)}";
 			if(severity == LogSeverity.ESSENTIAL || severity >= logLevel) {
 				switch(severity) {
 					case LogSeverity.ESSENTIAL:
@@ -35,12 +35,12 @@ namespace TheGenesisProjectModPatcher {
 						Console.ForegroundColor = ConsoleColor.Magenta;
 						break;
 				}
-				Console.WriteLine(line);
+				Console.Write(beans);
 				Console.ResetColor();
 			}
 			using(FileStream fs = File.Open($"logs/{modname}-{date}.log", FileMode.Append)) {
 				using(StreamWriter sw = new StreamWriter(fs)) {
-					sw.WriteLine(line);
+					sw.WriteLine(beans);
 				}
 			}
         }
