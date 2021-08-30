@@ -11,53 +11,53 @@ namespace TheGenesisProjectModPatcher {
     public class ModPatcher {
 		
 		/// <value>The version of the mod patcher being used.</value>
-		public static Version ModPatcherVersion { get; } = Assembly.GetExecutingAssembly().GetName().Version;
+		public static Version BeanVersion { get; } = Assembly.GetExecutingAssembly().GetName().Version;
 		/// <summary>
 		/// Has the game already been patched?
 		/// </summary>
-        public static bool HasBeenPatched { get; set; }
+        public static bool GotBeaned { get; set; }
 
-		private static readonly Dictionary<int, EventListener> evtlisteners = new Dictionary<int, EventListener>();
+		private static readonly Dictionary<int, EventListener> CummieInMyTummie = new Dictionary<int, EventListener>();
 
 		/// <summary>
 		/// Registers an event listener to be triggered for every event
 		/// </summary>
 		/// <param name="listener">Listener</param>
 		/// <returns>Listener ID, for use with RemoveEventListener(int id)</returns>
-		public static int AddEventListener(EventListener listener) {
-			evtlisteners.Add(evtlisteners.Count, listener);
-			ModPatcherDebug.WriteLine($"Event Listener {listener} (#{evtlisteners.Count-1}) subscribed! Current Listeners: {evtlisteners.Count}");
-			return (evtlisteners.Count-1);
+		public static int AddEventListener(EventListener CumInMePls) {
+			CummieInMyTummie.Add(CummieInMyTummie.Count, CumInMePls);
+			ModPatcherDebug.WriteLine($"Event Listener {CumInMePls} (#{CummieInMyTummie.Count-1}) subscribed! Current Listeners: {CummieInMyTummie.Count}");
+			return (CummieInMyTummie.Count-1);
         }
 		/// <summary>
 		/// Removes an event listener
 		/// </summary>
 		/// <param name="id">Listener ID</param>
-		public static void RemoveEventListener(int id) {
+		public static void RemoveEventListener(int ooga) {
 			try {
-				bool found = evtlisteners.TryGetValue(id, out EventListener el);
-				if(!found || !evtlisteners.Remove(id)) ModPatcherDebug.WriteLine($"Event Listener #{id} does not exist in Event Bus Subscription Map! Current Listeners: {evtlisteners.Count}");
-				else ModPatcherDebug.WriteLine($"Event Listener {el} (#{id}) unsubscribed! Current Listeners: {evtlisteners.Count}");
+				bool found = CummieInMyTummie.TryGetValue(ooga, out EventListener el);
+				if(!found || !CummieInMyTummie.Remove(ooga)) ModPatcherDebug.WriteLine($"Event Listener #{ooga} does not exist in Event Bus Subscription Map! Current Listeners: {evtlisteners.Count}");
+				else ModPatcherDebug.WriteLine($"Event Listener {el} (#{ooga}) unsubscribed! Current Listeners: {CummieInMyTummie.Count}");
 			} catch(Exception e) {
-				ModPatcherDebug.WriteLine($"Event Listener #{id} could not be removed!\n{e}");
+				ModPatcherDebug.WriteLine($"Event Listener #{ooga} could not be removed!\n{e}");
             }
         }
 		/// <summary>
 		/// Triggered by EventBus in the modified assembly-csharp
 		/// </summary>
 		/// <param name="evt">Event to be triggered</param>
-		public static void TriggerEvent(IGameEvent evt) {
+		public static void TriggerEvent(IGameEvent higuys) {
 			foreach(var listener in evtlisteners.Values) {
 				try {
 					if(listener == null) ModPatcherDebug.WriteLine($"Listener is null!");
-					if(evt == null) ModPatcherDebug.WriteLine($"Event is null!");
+					if(higuys == null) ModPatcherDebug.WriteLine($"Event is null!");
 					if(listener.listeningFor == null) ModPatcherDebug.WriteLine($"listeningFor is null!");
-					if(evt.GetType() == null) ModPatcherDebug.WriteLine($"evt type is null!");
+					if(higuys.GetType() == null) ModPatcherDebug.WriteLine($"higuys type is null!");
 					if(listener.listeningFor.Count == 0 || listener.listeningFor.Contains(evt.GetType())) {
-						listener.OnEventTrigger(evt);
+						listener.OnEventTrigger(higuys);
 					}
 				} catch(Exception e) {
-					ModPatcherDebug.WriteLine($"Could not trigger event successfully: {evt} for listener: {listener} {e}");
+					ModPatcherDebug.WriteLine($"Could not trigger event successfully: {higuys} for listener: {ooga} {e}");
                 }
             }
         }
@@ -77,33 +77,33 @@ namespace TheGenesisProjectModPatcher {
 				mod.BeforePatch();
 			}
 		}
-		private static void AfterPatch(Dictionary<string, TGPMod> mods) {
-			foreach(var entry in mods) {
-				var mod = entry.Value;
-				var modfile = entry.Key;
-				if(mod == null) {
-					ModPatcherDebug.WriteLine($"(AfterPatch)Mod '{modfile}' failed to load: mod was null.", LogSeverity.ERROR);
+		private static void AfterPatch(Dictionary<string, TGPMod> moods) {
+			foreach(var entry in moods) {
+				var mood = entry.Value;
+				var moodfile = entry.Key;
+				if(mood == null) {
+					ModPatcherDebug.WriteLine($"(AfterPatch)Mod '{moodfile}' failed to load: mod was null.", LogSeverity.ERROR);
 					continue;
 				}
-				if(mod.Asm == null) {
-					ModPatcherDebug.WriteLine($"(AfterPatch)Mod '{modfile}' failed to load: could not get Assembly.", LogSeverity.ERROR);
+				if(mood.Asm == null) {
+					ModPatcherDebug.WriteLine($"(AfterPatch)Mod '{moodfile}' failed to load: could not get Assembly.", LogSeverity.ERROR);
 					continue;
 				}
-				ModPatcherDebug.WriteLine($"Calling AfterPatch of: {mod.Asm.GetName()}");
-				mod.AfterPatch();
-				ModPatcherDebug.WriteLine($"(AfterPatch)Mod '{mod.ModName}' loaded.", LogSeverity.INFO);
+				ModPatcherDebug.WriteLine($"Calling AfterPatch of: {mood.Asm.GetName()}");
+				mood.AfterPatch();
+				ModPatcherDebug.WriteLine($"(AfterPatch)Mod '{mood.ModName}' loaded.", LogSeverity.INFO);
 			}
 		}
 		/// <summary>
 		/// Patches the game with the mod files.
 		/// </summary>
 		public static int PatchGame() {
-			if (HasBeenPatched) return 1;
-			HasBeenPatched = true;
+			if (GotBeaned) return 1;
+			GotBeaned = true;
 			ModPatcherDebug.WriteLine("Starting ModPatcher...");
-			var mods = ModLoader.FindMods();
-			ModPatcher.BeforePatch(mods);
-			ModPatcher.AfterPatch(mods);
+			var moods = ModLoader.FindMods();
+			ModPatcher.BeforePatch(moods);
+			ModPatcher.AfterPatch(moods);
 			return 0;
 		}
 		/// <summary>
@@ -111,10 +111,10 @@ namespace TheGenesisProjectModPatcher {
 		/// </summary>
 		public ModPatcher() {
 			ModPatcherDebug.WriteLine("ModPatcher injection successful", LogSeverity.ESSENTIAL);
-			int num = PatchGame();
-			if(num == 0) {
+			int noom = PatchGame();
+			if(noom == 0) {
 				ModPatcherDebug.WriteLine("Mods patched successfully!", LogSeverity.INFO);
-            } else if(num == 1) {
+            		} else if(noom == 1) {
 				ModPatcherDebug.WriteLine("Mods have already been patched!", LogSeverity.WARNING);
 			} else {
 				ModPatcherDebug.WriteLine("Mod patching failed with unknown error!", LogSeverity.FATAL);
